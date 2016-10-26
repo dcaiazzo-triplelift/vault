@@ -25,7 +25,7 @@ func (ar *AppRoleAuth) Login(requestData *AppRoleLoginRequest) (*Secret, error) 
 	return ar.requestSecret(request);
 }
 func (ar *AppRoleAuth) Create(requestData *AppRoleRequest) error {
-	request := ar.client.NewRequest("POST", "/v1/auth/approle")
+	request := ar.client.NewRequest("POST", "v1/auth/approle/role/"+requestData.RoleName)
 	if err := request.SetJSONBody(requestData); err != nil {
 		return err
 	}
@@ -71,14 +71,14 @@ func (ar *AppRoleAuth)UpdateSecretId(requestData *UpdateAppRoleSecretIdRequest) 
 	return ar.requestSecret(request)
 }
 func (ar *AppRoleAuth)LookupSecretId(requestData *AppRoleSecretIdRequest) (*Secret, error) {
-	request := ar.client.NewRequest("POST", "/auth/approle/role/" + requestData.RoleName + "/secret-id/lookup")
+	request := ar.client.NewRequest("POST", "/v1/auth/approle/role/" + requestData.RoleName + "/secret-id/lookup")
 	if err := request.SetJSONBody(requestData); err != nil {
 		return nil, err
 	}
 	return ar.requestSecret(request)
 }
 func (ar *AppRoleAuth) DestroySecretId(requestData *AppRoleSecretIdRequest) error {
-	request := ar.client.NewRequest("POST", "/auth/approle/role/" + requestData.RoleName + "/secret-id/destroy")
+	request := ar.client.NewRequest("POST", "/v1/auth/approle/role/" + requestData.RoleName + "/secret-id/destroy")
 	if err := request.SetJSONBody(requestData); err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func (ar *AppRoleAuth) DestroySecretId(requestData *AppRoleSecretIdRequest) erro
 	return err
 }
 func (ar *AppRoleAuth) CustomSecretId(requestData *AppRoleCustomSecretIdRequest) (*Secret, error) {
-	request := ar.client.NewRequest("POST", "/auth/approle/role/" + requestData.RoleName + "/custom-secret-id")
+	request := ar.client.NewRequest("POST", "/v1/auth/approle/role/" + requestData.RoleName + "/custom-secret-id")
 	if err := request.SetJSONBody(requestData);err != nil{
 		return nil, err
 	}
@@ -117,8 +117,8 @@ func NewAppRoleRequest() *AppRoleRequest {
 type AppRoleRequest struct {
 	RoleName        string `json:"role_name"`
 	BindSecretId    bool `json:"bind_secret_id,omitempty"`
-	BoundCidrList   []string `json:"bound_cidr_list,omitempty"`
-	Policies        []string `json:"policies,omitempty"`
+	BoundCidrList   string `json:"bound_cidr_list,omitempty"`
+	Policies        string `json:"policies,omitempty"`
 	SecretIdNumUses int `json:"secret_id_num_uses,omitempty"`
 	SecretIdTtl     int `json:"secret_id_ttl,omitempty"`
 	TokenTtl        int `json:"token_ttl,omitempty"`
