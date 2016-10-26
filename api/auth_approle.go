@@ -89,7 +89,7 @@ func (ar *AppRoleAuth) DestroySecretId(requestData *AppRoleSecretIdRequest) erro
 func (ar *AppRoleAuth) CustomSecretId(requestData *AppRoleCustomSecretIdRequest) (*Secret, error) {
 	request := ar.client.NewRequest("POST", "/auth/approle/role/" + requestData.RoleName + "/custom-secret-id")
 	if err := request.SetJSONBody(requestData);err != nil{
-		return err
+		return nil, err
 	}
 	return ar.requestSecret(request)
 }
